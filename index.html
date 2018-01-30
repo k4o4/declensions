@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Профессиональная версия</title>
+</head>
+<body>
+	<style type="text/css">
+		body {
+			background-image: url('billing.png');
+			background-repeat: no-repeat;
+		}
+		form > span {
+			cursor: pointer;
+			display: inline-block;
+			height: 30px;
+			text-align: center;
+			width: 30px;
+		}
+		#description {
+			color: #6B7684;
+			font-family: Roboto;
+			font-size: 14px;
+			font-weight: 500;
+			height: 48px;
+			left: 252px;
+			position: absolute;
+			top: 242px;
+			width: 762px;
+		}
+		#testme {
+			left: 800px;
+			position: absolute;
+			text-align: right;
+			top: 650px;
+		}
+		#testme > input {
+			text-align: right;
+		}
+	</style>
+
+<div id="description">
+	Lorem bablabla
+</div>
+
+
+<form id="testme">
+	
+<label> Операторов </label>
+<span class="numberOfAgents decrease"> - </span>
+<input type="text" name="numberOfAgents"> 
+<span class="numberOfAgents increase"> + </span>
+<br><br>
+<label> Лицензий </label>
+<span class="numberOfAgentLicenses decrease"> - </span>
+<input type="text" name="numberOfAgentLicenses"> 
+<span class="numberOfAgentLicenses increase"> + </span>
+<br><br>
+<label> Пользователей </label>
+<span class="numberOfUsers decrease"> - </span>
+<input type="text" name="numberOfUsers"> 
+<span class="numberOfUsers increase"> + </span>
+<br>
+
+</form>
+
+<script type="text/javascript">
+	var description = document.getElementById('description');
+	var numberOfAgents = 10;
+	var numberOfUsers = 8;
+	var numberOfAgentLicenses = 3;
+
+	var declensions = {};
+	declensions.agents = {
+		0: "операторов",
+		1: "оператор",
+		2: "оператора",
+		3: "оператора",
+		4: "оператора",
+		5: "операторов",
+		6: "операторов",
+		7: "операторов",
+		8: "операторов",
+		9: "операторов",
+		11: "операторов"
+	};
+
+	declensions.agentLicenses = {
+		0: "0",
+		1: "операторская лицензия свободна",
+		2: "операторских лицензии свободно",
+		3: "операторских лицензии свободно",
+		4: "операторских лицензии свободно",
+		5: "операторских лицензий свободно",
+		6: "операторских лицензий свободно",
+		7: "операторских лицензий свободно",
+		8: "операторских лицензий свободно",
+		9: "операторских лицензий свободно",
+		11: "операторских лицензий свободно"
+
+	};
+
+	declensions.users = {
+		0: "пользователей",
+		1: "пользователь",
+		2: "пользователя",
+		3: "пользователя",
+		4: "пользователя",
+		5: "пользователей",
+		6: "пользователей",
+		7: "пользователей",
+		8: "пользователей",
+		9: "пользователей",
+		11: "пользователей"
+	};
+
+	function getLastDigit(number) {
+		if(number.toString().substring(number.toString().length-2) == '11') {
+			return '11';
+		} else {
+			return number.toString().substring(number.toString().length-1);
+		}
+	}
+
+	function getWordByNumber(word, number) {
+		switch (getLastDigit(number)) {
+			case '11': 
+				return declensions[word][11];
+				break;
+			case '1': 
+				return declensions[word][1];
+				break;
+			case '2': 
+			case '3': 
+			case '4': 
+				return declensions[word][2];
+				break;	
+			case '5': 	
+			case '6': 	
+			case '7': 	
+			case '8': 	
+			case '9': 	
+			case '0': 
+				return declensions[word][5];
+				break;	
+			default:
+				return '';
+				break;			
+		}
+
+	}
+
+
+
+
+	function changeNumbers(what, value) {
+		if(value == 'increase') {
+			if(window[what] > 0) {
+				window[what]++;
+				document.getElementsByName(what)[0].value = window[what];
+				changeText();
+			}
+		} else if(value == 'decrease') {
+			if(window[what] > 0) {
+				window[what]--;
+				document.getElementsByName(what)[0].value = window[what];
+				changeText();
+			}
+		} else {
+			if(value >= 0 && value != '') {
+				console.log(value);
+				window[what] = value;
+				changeText();
+			} else {
+				window[what] = "Ты всё сломал, молодец";
+				changeText();
+			}
+		}
+	}
+
+	function changeText() {
+		var descriptionValue = 'Вы можете добавить в свой аккаунт любое количество пользователей и выбрать до 5 из них, кому будут приходить обращения от клиентов. Сейчас выбран' + (getLastDigit(numberOfAgents)==1?' ':'о ') + numberOfAgents + ' ' + getWordByNumber('agents', numberOfAgents) + ', ' + numberOfAgentLicenses + ' ' + getWordByNumber('agentLicenses', numberOfAgentLicenses) + '. Всего в аккаунте ' + numberOfUsers + ' ' + getWordByNumber('users', numberOfUsers);
+		description.innerHTML = descriptionValue;
+	}
+
+	changeText();
+	(function initForm(){
+		document.getElementsByName('numberOfAgents')[0].value = numberOfAgents;
+		document.getElementsByName('numberOfAgentLicenses')[0].value = numberOfAgentLicenses;
+		document.getElementsByName('numberOfUsers')[0].value = numberOfUsers;
+
+		var allButtons = document.getElementsByTagName('span');
+		for(var i = 0; i < allButtons.length; i++) {
+			allButtons[i].addEventListener('click', function(e) {
+				console.log(e);
+				e.preventDefault();
+				changeNumbers(this.className.split(' ')[0], this.className.split(' ')[1]);
+			});
+			
+		}
+
+		var allInputs = document.getElementsByTagName('input');
+		for(var i = 0; i < allInputs.length; i++) {
+			console.log(allInputs[i])
+			allInputs[i].addEventListener('input', function(e) {
+				e.preventDefault();
+				changeNumbers(this.name, this.value);
+			});
+			
+		}
+	})();
+
+</script>
+
+</body>
+</html
