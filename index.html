@@ -167,7 +167,6 @@
 			}
 		} else {
 			if(value >= 0 && value != '') {
-				console.log(value);
 				window[what] = value;
 				changeText();
 			} else {
@@ -191,7 +190,6 @@
 		var allButtons = document.getElementsByTagName('span');
 		for(var i = 0; i < allButtons.length; i++) {
 			allButtons[i].addEventListener('click', function(e) {
-				console.log(e);
 				e.preventDefault();
 				changeNumbers(this.className.split(' ')[0], this.className.split(' ')[1]);
 			});
@@ -200,7 +198,6 @@
 
 		var allInputs = document.getElementsByTagName('input');
 		for(var i = 0; i < allInputs.length; i++) {
-			console.log(allInputs[i])
 			allInputs[i].addEventListener('input', function(e) {
 				e.preventDefault();
 				changeNumbers(this.name, this.value);
